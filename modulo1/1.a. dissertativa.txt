@@ -1,0 +1,17 @@
+1. a) Tabuada do 9 - Dissertativa:
+
+#Entrada
+1 - Leia do teclado e armazene o número que se deseja multiplicar por 9; 
+
+#Processamento
+3 - Aplique a operação de subtração entre o número armazenado e 1 e armazene o resultado;
+
+4 - Adicione um 0 ao final do resultado armazenado /*ou*/ [ Multiplique o resultado armazenado por 10 ] e armazene o resultado;
+
+5 - Aplique a operação de subtração entre 10 e o número inicialmente armazenado e armazene o resultado;
+
+6 - Aplique a operação de soma entre os dois resultados armazenados;
+
+
+#Saída
+ - Apresente na tela o resultado da soma final dos algoritmos e finalize o programa.

@@ -1,0 +1,22 @@
+1. b) Tabuada do 9 - Pseudocodigo:
+
+1- Início
+
+#Entrada
+2- Leia X;
+
+#Processamento
+3 - Z = X - 1;
+
+4 - R = Z x 10;
+[ou]
+4 - R = Z & 0;
+
+5 - W = 10 - X
+
+6 - Y = R + W
+
+#Saída
+- Imprima Y;
+
+- Fim
