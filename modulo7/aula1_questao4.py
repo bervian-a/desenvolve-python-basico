@@ -15,12 +15,12 @@ def numero_completo (celular):
         if celular[0] != "9":
             print("Número inválido, o primeiro dígito deve ser 9.")
             return
-        else:
-             print ("Número inválido! O número deve ter 8 ou 9 dígitos.")
+        
+    else:
+        print ("Número inválido! O número deve ter 8 ou 9 dígitos.")
         return
     
-    # Adiciona o separador "-"
-    numero_completo = celular[:5] + "-" + celular[5:]
+    numero_completo = celular[:5] + "-" + celular[5:] # Adiciona o separador "-"
     print(f"Número completo: {numero_completo}")
 
 # Chama a função
