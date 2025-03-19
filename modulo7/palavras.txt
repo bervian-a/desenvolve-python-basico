@@ -1,0 +1,7 @@
+salvar
+esta
+frase
+exercicio
+aula
+modulo
+python
