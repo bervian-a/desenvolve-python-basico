@@ -1,0 +1,8 @@
+codigo,atividade,regiao,tecnico,preco
+aq01,assistencia qualidade,MG sul,Ana Costa,"R$ 2.000,00"
+aq02,assistencia qualidade,RS noroeste,Lucas Pereira,"R$ 2.000,00"
+te01,treinamento equipe,MG sul,Ana Costa,"R$ 1.000,00"
+te02,treinamento equipe,RS noroeste,Lucas Pereira,"R$ 1.000,00"
+le01,limpeza de equipamento,MG sul,Ana Costa,"R$ 2.500,00"
+le02,limpeza de equipamento,RS noroeste,Lucas Pereira,"R$ 2.500,00"
+rp01,reproducao,MG centrooeste,Beatriz Almeida,"R$ 5.000,00"

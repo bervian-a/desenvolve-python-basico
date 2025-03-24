@@ -1,0 +1,8 @@
+usuario;senha;nome;telefone;cargo;permissao
+alinesouza;asg123;Aline Souza;(11) 98765-4321;Gestor;gestor
+joaosilva;jsc234;Joao Silva;(21) 99876-5432;Cliente;cliente
+mariaoliveira;moc234;Maria Oliveira;(31) 91234-5678;Cliente;cliente
+pedrosouza;psc234;Pedro Souza;(41) 98765-1234;Cliente;cliente
+anacosta;act234;Ana Costa;(51) 96543-2109;Tecnico;tecnico
+lucaspereira;lpt234;Lucas Pereira;(61) 93456-7890;Tecnico;tecnico
+beatrizalmeida;bat234;Beatriz Almeida;(71) 96789-3456;Tecnico;tecnico
