@@ -1,9 +1,9 @@
-nome_usuario,senha,nome,telefone,permissao
-alinesouza,asg123,Aline Souza,(11)98765-4321,administrador
-joaosilva,jsc234,Joao Silva,(21)99876-5432,cliente
-mariaoliveira,moc234,Maria Oliveira,(31)91234-5678,cliente
-pedrosouza,psc234,Pedro Souza,(41)98765-1234,cliente
-anacosta,act234,Ana Costa,(51)96543-2109,profissional
-lucaspereira,lpt234,Lucas Pereira,(61)93456-7890,profissional
-beatrizalmeida,bat234,Beatriz Almeida,(71)96789-3456,profissional
-abisco,1234,Abisco,51996658977,cliente
+nome_usuario,senha,nome,telefone,'permissao'
+alinesouza,asg123,Aline Souza,(11)98765-4321,'administrador'
+joaosilva,jsc234,Joao Silva,(21)99876-5432,'cliente'
+mariaoliveira,moc234,Maria Oliveira,(31)91234-5678,'cliente'
+pedrosouza,psc234,Pedro Souza,(41)98765-1234,'cliente'
+anacosta,act234,Ana Costa,(51)96543-2109,'profissional'
+lucaspereira,lpt234,Lucas Pereira,(61)93456-7890,'profissional'
+beatrizalmeida,bat234,Beatriz Almeida,(71)96789-3456,'profissional'
+abisco,1234,Abisco,51996658977,'cliente'

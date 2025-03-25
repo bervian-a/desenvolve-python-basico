@@ -163,7 +163,7 @@ def excluir_usuario(usuarios, arq_user_csv):
 #   usuarios (dict) - dicionário de usuários.
 #   arq_user_csv (str) - caminho do arquivo CSV.
 # Retorno: bool - True se a senha foi atualizada com sucesso, False caso contrário.
-def atualiza_senha(usuarios, arq_user_csv):
+def atualizar_senha(usuarios, arq_user_csv):
     global USUARIO_LOGADO
 
     if USUARIO_LOGADO is None:
@@ -179,7 +179,7 @@ def atualiza_senha(usuarios, arq_user_csv):
     if USUARIO_LOGADO.permissao == 'profissional':
         console.print(Panel('''[bold yellow]Atualização de Senha[/bold yellow]\nEscolha qual usuário terá a senha atualizada.''', 
                             title="Atualizar Senha", expand=False))     
-        atualiza_profissional = (input ("Por favor, digite '1' para atualizar a SUA senha ou '2' para atualizar a senha de algum cliente seu."))
+        atualiza_profissional = Prompt.ask("[bold cyan]Por favor, digite '1' para atualizar a SUA senha ou '2' para atualizar a senha de algum cliente seu.[/bold cyan]")
         if atualiza_profissional == "1":
             nome_usuario = USUARIO_LOGADO.login
         elif atualiza_profissional == "2":
@@ -209,6 +209,46 @@ def atualiza_senha(usuarios, arq_user_csv):
         console.print(f"[bold yellow]Usuário '{nome_usuario}' não encontrado![/bold yellow]", style="yellow")
         return False
     
+##### CRUD Read
+# Função para ler informações de cadastro de um usuário.
+# controle de acesso permite o acesso unico por usuário e de todas as informações apenas a administradores.
+# Parâmetros: 
+#   usuarios (dict) - dicionário de usuários.
+#   arq_user_csv (str) - caminho do arquivo CSV.
+# Retorno: print das informações
+def mostrar_informacoes(arq_user_csv):
+    global USUARIO_LOGADO
+
+    if USUARIO_LOGADO is None:
+        print('Essa função não deve ser chamada sem um usuário logado!!!')
+        return False
+
+    if USUARIO_LOGADO.permissao == 'cliente' or USUARIO_LOGADO.permissao == 'profissional':
+        console.print(Panel('[bold yellow]Informações de Cadastro[/bold yellow]', 
+                            title="Informações de cadastro", expand=False))
+        with open(arq_user_csv, mode='r', newline='', encoding='utf-8') as file:
+            reader = csv.reader(file)
+        
+            next(reader) # Ignorar o cabeçalho (primeira linha)
+            for row in reader:
+                login, senha, nome, telefone, permissao = row
+                if login == USUARIO_LOGADO.login:
+                    print(f"Informações do usuário ({USUARIO_LOGADO.login}):")
+                    print(f"Login: '{login}' , Nome: '{nome}', Senha: '{senha}', Telefone: '{telefone}', Permissão: '{permissao}'")
+                return menu_interno
+            ##ver se return da erro
+
+    if USUARIO_LOGADO.permissao == 'administrador':
+        console.print(Panel("[bold yellow]Informações de Cadastro [/bold yellow]", 
+                            title="Informações de cadastro", expand=False))
+
+        with open(arq_user_csv, mode='r', newline='', encoding='utf-8') as file:
+            reader = csv.reader(file)
+            for row in reader:
+                print(row)
+    else:
+        print(f"Usuário com login {USUARIO_LOGADO.login} não encontrado.")
+
 ##################### FIM FUNÇÕES DE USUARIO ########################
 
 
@@ -296,7 +336,7 @@ def excluir_servico(servicos, arq_serv_csv):
 #   servicos (dict) - dicionário de servicos.
 #   arq_serv_csv (str) - caminho do arquivo CSV.
 # Retorno: bool - True se a senha foi atualizado com sucesso, False caso contrário.
-def atualiza_preco(servicos, arq_serv_csv):
+def atualizar_preco(servicos, arq_serv_csv):
     if USUARIO_LOGADO is not None and USUARIO_LOGADO.permissao == 'administrador':
         console.print(Panel('''[bold yellow]Atualização de Preço de serviço[/bold yellow]\nPor favor, insira o codigo do serviço para realizar a atualização.''', 
                             title="Atualizar preço", expand=False))
@@ -403,7 +443,7 @@ def fazer_login(usuarios):
     # explicitar o acesso à variável global senão a atribuição ao final da função vai criar uma nova variável local
     global USUARIO_LOGADO # Atualiza a variável global USUARIO_LOGADO em caso de login bem sucedido.
 
-    console.print(Panel('''🟢 [bold green]Login[/bold green] 🟢\n\nPor favor, insira seus dadsos:''', #Customização
+    console.print(Panel('''🟢 [bold green]Login[/bold green] 🟢\n\nPor favor, insira seus dados:''', #Customização
                         expand=False, title="Tela de Login"))
     usuario = Prompt.ask("[bold cyan]Login de Usuário[/bold cyan]")
     senha = getpass("Senha: ")
@@ -430,6 +470,8 @@ while True:
             USUARIO_LOGADO = usuarios.get(novo_user)
     elif opcao == "3":
        print (ler_servicos('servicos.csv')) #apresenta os serviços e retorna ao menu inicial
+    elif opcao == "4":
+        mostrar_informacoes (USUARIO_LOGADO, ARQUIVO_USUARIOS)
     elif opcao == "0": #sai do programa
         break
     else:
@@ -440,10 +482,14 @@ while True:
             opcao = menu_interno()
             if opcao == '0': break
             elif opcao == "1": 
-                if atualiza_senha(usuarios, ARQUIVO_USUARIOS): #CRUD :::: UPDATE
+                if atualizar_senha(usuarios, ARQUIVO_USUARIOS): #CRUD :::: UPDATE
                     usuarios = ler_usuarios(ARQUIVO_USUARIOS)
             elif opcao == "2": 
                 if excluir_usuario(usuarios, ARQUIVO_USUARIOS): #CRUD :::: DELETE
                     usuarios = ler_usuarios(ARQUIVO_USUARIOS)
+            elif opcao == "3":
+                print (ler_servicos('servicos.csv')) #apresenta os serviços e retorna ao menu inicial
+            elif opcao == "4":
+                mostrar_informacoes (ARQUIVO_USUARIOS)
 ##################### FIM FLUXO PRINCIPAL DO CODIGO ###################### 
 
