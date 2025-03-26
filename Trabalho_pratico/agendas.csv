@@ -1,0 +1,10 @@
+cliente,cod_serv,servico,tecnico,data,cod_agenda
+Pedro Souza,rp01,reproducao,Beatriz Almeida,2025-03-29,Pedro Souzarp01
+Maria Oliveira,le01,limpeza de equipamento,Ana Costa,2025-04-01,Maria Oliveirale01
+Joao Silva,aq02,assistencia qualidade,Lucas Pereira,2025-03-28,Joao Silvaaq02
+Maria Oliveira,aq02,assistencia qualidade,Lucas Pereira,2025-04-01,Maria Oliveiraaq02
+Joao Silva,le01,limpeza de equipamento,Ana Costa,2025-03-28,Joao Silvale01
+cliente teste,le01,limpeza de equipamento,Ana Costa,2025-03-28,cliente testele01
+pedrosouza,le01,reproducao,profissional teste,2500,pedrosouzale01
+teste,tes12,teste teste,profissional teste,2025-03-29,testetes12
+Teste02,lp65,lepto,profissional teste,25/01/02,Teste02lp65
