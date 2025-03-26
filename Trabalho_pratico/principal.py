@@ -9,32 +9,32 @@ from rich.panel import Panel
 
 ##################### INICIO FUNÇÕES INICIAIS BASE DE DADOS #####################
 #Base de dados dos USUARIOS/ login
-dados_usuarios  = [
-    ['nome_usuario','senha','nome','telefone','permissao'],
-['alinesouza','asg123','Aline Souza','(11)98765-4321','administrador'],
-['joaosilva','jsc234','Joao Silva','(21)99876-5432','cliente'],
-['mariaoliveira','moc234','Maria Oliveira','(31)91234-5678','cliente'],
-['pedrosouza','psc234','Pedro Souza','(41)98765-1234','cliente'],
-['anacosta','act234','Ana Costa','(51)96543-2109','profissional'],
-['lucaspereira','lpt234','Lucas Pereira','(61)93456-7890','profissional'],
-['beatrizalmeida','bat234','Beatriz Almeida','(71)96789-3456','profissional']
-]
+#dados_usuarios  = [
+#    ['nome_usuario','senha','nome','telefone','permissao'],
+#['alinesouza','asg123','Aline Souza','(11)98765-4321','administrador'],
+#['joaosilva','jsc234','Joao Silva','(21)99876-5432','cliente'],
+#['mariaoliveira','moc234','Maria Oliveira','(31)91234-5678','cliente'],
+#['pedrosouza','psc234','Pedro Souza','(41)98765-1234','cliente'],
+#['anacosta','act234','Ana Costa','(51)96543-2109','profissional'],
+#['lucaspereira','lpt234','Lucas Pereira','(61)93456-7890','profissional'],
+#['beatrizalmeida','bat234','Beatriz Almeida','(71)96789-3456','profissional']
+#]
 #with open("usuarios.csv", mode="w", newline="") as file: #criando a base de dados
 #    writer = csv.writer(file, delimiter=',')
 #    writer.writerows(dados_usuarios)
 #########################################################
 
 #Base de dados dos SERVICOS
-dados_servicos  = [
-    ['codigo','atividade','regiao','profissional','preco'],
-['aq01','assistencia qualidade','MG sul', 'Ana Costa','R$ 2.000,00'],
-['aq02','assistencia qualidade','RS noroeste','Lucas Pereira','R$ 2.000,00'],
-['te01','treinamento equipe','MG sul','Ana Costa','R$ 1.000,00'],
-['te02','treinamento equipe','RS noroeste','Lucas Pereira','R$ 1.000,00'],
-['le01','limpeza de equipamento','MG sul','Ana Costa','R$ 2.500,00'],
-['le02','limpeza de equipamento','RS noroeste','Lucas Pereira','R$ 2.500,00'],
-['rp01','reproducao','MG centrooeste','Beatriz Almeida','R$ 5.000,00']
-]
+#dados_servicos  = [
+#    ['codigo','atividade','regiao','profissional','preco'],
+#['aq01','assistencia qualidade','MG sul', 'Ana Costa','R$ 2.000,00'],
+#['aq02','assistencia qualidade','RS noroeste','Lucas Pereira','R$ 2.000,00'],
+#['te01','treinamento equipe','MG sul','Ana Costa','R$ 1.000,00'],
+#['te02','treinamento equipe','RS noroeste','Lucas Pereira','R$ 1.000,00'],
+#['le01','limpeza de equipamento','MG sul','Ana Costa','R$ 2.500,00'],
+#['le02','limpeza de equipamento','RS noroeste','Lucas Pereira','R$ 2.500,00'],
+#['rp01','reproducao','MG centrooeste','Beatriz Almeida','R$ 5.000,00']
+#]
 
 #with open("servicos.csv", mode="w", newline="") as file: #criando a base de dados serviços
 #    writer = csv.writer(file, delimiter=',')
@@ -42,12 +42,12 @@ dados_servicos  = [
 #########################################################
 
 #Base de dados dos AGENDAMENTOS
-dados_agendas  = [
-['Cliente','cod_serv','servico','tecnico','data'],
-['Pedro Souza','rp01','reproducao','Beatriz Almeida','2025-03-29'],
-['Maria Oliveira','le01','limpeza de equipamento','Ana Costa','2025-04-01'],
-['Joao Silva','aq02','assistencia qualidade','Lucas Pereira','2025-03-28']
-]
+#dados_agendas  = [
+#['Cliente','cod_serv','servico','tecnico','data', 'cod_agenda'],
+#['Pedro Souza','rp01','reproducao','Beatriz Almeida','2025-03-29'],
+#['Maria Oliveira','le01','limpeza de equipamento','Ana Costa','2025-04-01'],
+#['Joao Silva','aq02','assistencia qualidade','Lucas Pereira','2025-03-28']
+#]
 #with open("agenda.csv", mode="w", newline="") as file: #criando a base de dados agendamentos #administrador
 #    writer = csv.writer(file, delimiter=',')
 #    writer.writerows(dados_agenda)
@@ -326,7 +326,6 @@ def atualizar_preco(servicos, arq_serv_csv):
                             title="Atualizar preço", expand=False))
 
         codigo = Prompt.ask("[bold cyan]Codigo do serviço: [/bold cyan]")
-    
         novo_preco = Prompt.ask("[bold cyan]Novo preço do serviço (digite no modelo correto - sem aspas >> 'R$_1.000,00'): [/bold cyan]")
 
         if servicos.get(codigo, None) is not None:
@@ -391,7 +390,7 @@ def ler_agendas(arq_agen_csv):
         reader = csv.reader(file)
         for row in reader:
             cliente,cod_serv,servico,tecnico,data,cod_agenda = row
-            agendas [cliente] = agenda (cliente=cliente,cod_serv=cod_serv,servico=servico,tecnico=tecnico,data=data,cod_agenda=cod_agenda)
+            agendas [cod_agenda] = agenda (cliente=cliente,cod_serv=cod_serv,servico=servico,tecnico=tecnico,data=data,cod_agenda=cod_agenda)
     
     return agendas #return será utilizado para abrir demais funcoes servico
 
@@ -488,36 +487,7 @@ def cadastrar_agenda(arq_agen_csv):
         console.print("[bold yellow]Você não possui permissão para realizar esta ação. Contate a administração![/bold yellow]", style="yellow")
         return False
     
-    return cliente
-
-def atualizar_agenda(agendas, arq_agen_csv, cod_agenda, nova_data):
-    if USUARIO_LOGADO is not None and USUARIO_LOGADO.permissao == 'profissional':
-        console.print(Panel('''[bold yellow]Atualização de Data do serviço a ser prestado[/bold yellow]\nPor favor, insira o nome do cliente e código do serviço para reagendar.''', 
-                            title="Atualizar agenda", expand=False))
-
-        # A seguir, vamos iterar sobre os valores do dicionário (as entradas de agenda)
-        for agenda_id, agenda in agendas.items():
-            if agenda["cod_agenda"] == cod_agenda:  # Verificar se o cod_agenda da linha corresponde
-                # Se encontrar o agendamento com o cod_agenda, atualizamos a data
-                agenda["data"] = nova_data  # Atualizando a data
-
-                # Agora, vamos reescrever o arquivo CSV com os dados atualizados
-                with open(arq_agen_csv, mode='w', newline='', encoding='utf-8') as file:
-                    writer = csv.DictWriter(file, fieldnames=agenda.keys())
-                    writer.writeheader()  # Escreve o cabeçalho
-                    for agenda in agendas.values():
-                        writer.writerow(agenda)  # Escreve as linhas atualizadas
-
-                console.print(f"[bold orange]Reagendamento confirmado[/bold green]\nAgenda de código '{cod_agenda}'\nReagendado para '{nova_data}'")
-                return True
-        
-        # Se não encontrar o cod_agenda correspondente
-        console.print("[bold yellow]Código de agendamento incorreto[/bold yellow]", style="yellow")
-        return False
-    
-    else:
-        console.print("[bold yellow]Você não possui permissão para realizar esta ação. Contate a administração![/bold yellow]", style="yellow")
-        return False
+    return cod_agenda
 
 ##### CRUD Update
 # Função para atualizar o preço de um serviço.
@@ -526,36 +496,41 @@ def atualizar_agenda(agendas, arq_agen_csv, cod_agenda, nova_data):
 #   servicos (dict) - dicionário de servicos.
 #   arq_serv_csv (str) - caminho do arquivo CSV.
 # Retorno: bool - True se a senha foi atualizado com sucesso, False caso contrário.
-def atualizar_agenda(agendas, arq_agen_csv):
+def atualizar_agenda(agenda, arq_agen_csv):
     if USUARIO_LOGADO is not None and USUARIO_LOGADO.permissao == 'profissional':
         console.print(Panel('''[bold yellow]Atualização de Data do serviço a ser prestado[/bold yellow]\nPor favor, insira o nome do cliente e código do serviço para reagendar.''', 
                             title="Atualizar agenda", expand=False))
-
-        cod_agenda = Prompt.ask("[bold cyan]Codigo de agendamento: [/bold cyan]")
-        nova_data = Prompt.ask("[bold cyan]Nova data do serviço (aaaa-mm-dd): [/bold cyan]") 
-
-        with open(arq_agen_csv, mode='r', newline='', encoding='utf-8') as file:
-            reader = csv.reader(file)
-            #rows = list(reader)  # Armazenar todas as linhas do arquivo
-            
-            for row in agendas:
-                if row[6] == cod_agenda:  # Supondo que a segunda coluna (índice 1) seja o código de agendamento
-                    row[5] = nova_data  # Atualizar a data (supondo que a data seja a 5ª coluna, índice 4)
-                    return True
-                else:
-                    console.print("[bold yellow]Código de agendamento incorreto![/bold yellow]", style="yellow")
-                    return False 
+        
+        cod_agenda = Prompt.ask("[bold cyan]Codigo de agendamento (Cliente+CodigoServiço): [/bold cyan]")
+        nova_data = Prompt.ask("[bold cyan]Nova data do serviço (aaaa-mm-dd): [/bold cyan]")
+        confirma_reagenda = Prompt.ask("[bold cyan]Digite '1' para confirmar ou '0' para cancelar e sair (1/0)[/bold cyan]")
+        if confirma_reagenda == '1':
+            if agendas.get(cod_agenda, None) is not None:
+                with open(arq_agen_csv, mode='w', newline='') as file:
+                    writer = csv.writer(file)
+                    for _, agenda in agendas.items():
+                        if agenda.cod_agenda != cod_agenda:
+                            writer.writerow([agenda.cliente, agenda.cod_serv, agenda.servico, agenda.tecnico, agenda.data, agenda.cod_agenda])
+                        else:
+                            writer.writerow([agenda.cliente, agenda.cod_serv, agenda.servico, agenda.tecnico, nova_data, agenda.cod_agenda])
+                console.print(f"[bold green]Data '{cod_agenda}' atualizada com sucesso![/bold green]")
+                return True         
                 
-        with open(arq_agen_csv, mode='w', newline='', encoding='utf-8') as file:
-            writer = csv.writer(file)
-            writer.writerows(rows)  
-        console.print(f"[bold orange]Reagendamento confirmado[/bold orange]\nAgenda de código '{cod_agenda}'\nReagendado para '{nova_data}'")
-        return True
+            else:
+                console.print("[bold orange]Código de agendamento incorreto[/bold orange]", style="yellow")
+                return False
+        elif confirma_reagenda =='0':
+            console.print("[bold orange]Reagendamento cancelado[/bold orange]", style="yellow")
+            return False
+        else:
+            console.print("[bold red]Opção inválida. Reagendamento cancelado[/bold red]", style="yellow")
+            return False
 
     else:
-        console.print("[bold yellow]Você não possui permissão para realizar esta ação![/bold yellow]", style="yellow")
+        console.print("[bold yellow]Você não possui permissão para realizar esta ação. Contate a administração![/bold yellow]", style="yellow")
         return False
-    
+
+
 ##################### FIM FUNÇÕES DE AGENDAMENTOS #####################
 
 ##################### INICIO FUNÇÕES DE MENU - INTERAÇÃO ########################
@@ -688,7 +663,7 @@ while True:
                     agendas = ler_agendas (ARQUIVO_AGENDAS)
             elif opcao == "10":                          #################################
                 if atualizar_agenda (agendas,ARQUIVO_AGENDAS):
-                    agendas = ler_agendas (ARQUIVO_AGENDAS)
+                  agendas = ler_agendas (ARQUIVO_AGENDAS)
 
 
 ##################### FIM FLUXO PRINCIPAL DO CODIGO ###################### 
