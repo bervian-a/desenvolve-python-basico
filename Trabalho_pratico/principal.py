@@ -8,6 +8,8 @@ from rich.prompt import Prompt
 from rich.panel import Panel
 
 ##################### INICIO FUNÇÕES INICIAIS BASE DE DADOS #####################
+## As 3 bases de dados foram iniciadas atraves do programa, fazendo lista e criando as linhas das tabelas no arquivo csv.
+
 #Base de dados dos USUARIOS/ login
 #dados_usuarios  = [
 #    ['nome_usuario','senha','nome','telefone','permissao'],
@@ -19,7 +21,9 @@ from rich.panel import Panel
 #['lucaspereira','lpt234','Lucas Pereira','(61)93456-7890','profissional'],
 #['beatrizalmeida','bat234','Beatriz Almeida','(71)96789-3456','profissional']
 #]
-#with open("usuarios.csv", mode="w", newline="") as file: #criando a base de dados
+
+ #criando a base de dados serviços
+#with open("usuarios.csv", mode="w", newline="") as file:
 #    writer = csv.writer(file, delimiter=',')
 #    writer.writerows(dados_usuarios)
 #########################################################
@@ -36,7 +40,8 @@ from rich.panel import Panel
 #['rp01','reproducao','MG centrooeste','Beatriz Almeida','R$ 5.000,00']
 #]
 
-#with open("servicos.csv", mode="w", newline="") as file: #criando a base de dados serviços
+#criando a base de dados serviços
+#with open("servicos.csv", mode="w", newline="") as file:
 #    writer = csv.writer(file, delimiter=',')
 #    writer.writerows(dados_servicos)
 #########################################################
@@ -48,25 +53,31 @@ from rich.panel import Panel
 #['Maria Oliveira','le01','limpeza de equipamento','Ana Costa','2025-04-01'],
 #['Joao Silva','aq02','assistencia qualidade','Lucas Pereira','2025-03-28']
 #]
-#with open("agenda.csv", mode="w", newline="") as file: #criando a base de dados agendamentos #administrador
+
+#criando a base de dados agendamentos
+#with open("agenda.csv", mode="w", newline="") as file:
 #    writer = csv.writer(file, delimiter=',')
 #    writer.writerows(dados_agenda)
-########### APENAS PARA CRIAR NO START DO PROGRAMA ###################
+########### UTILIZADO APENAS PARA CRIAR NO START DO PROGRAMA ###################
 ##################### FIM DAS FUNÇÕES INICIAIS BASE DE DADOS #####################
 
 ###CONSTANTES###
-## arquivos
+## Geradas variáveis para cada arquivo utilizado no programa.
 ARQUIVO_USUARIOS = 'usuarios.csv'
 ARQUIVO_SERVICOS = 'servicos.csv'
 ARQUIVO_AGENDAS = 'agendas.csv'
-#usuario
+
+# Usuario: criado variável usuário e para startar o programa sempre com nenhum usuario logado.
 USUARIO_LOGADO = None
 
 ##################### INICIO FUNÇÕES DE USUÁRIO #####################
+
 ##### CRUD Read
-# Função para ler usuários do arquivo CSV.
-# Parâmetro: arq_user_csv (str) - caminho do arquivo CSV.
-# #Retorno: dict - dicionário com logins como chaves e tuplas; Login como valores.
+# Função para ler usuários de arquivo CSV.
+# Parâmetro:
+    # arq_user_csv (str) >>> arquivo CSV de usuários.
+#Retorno: dicionário 'usuarios' com logins como chaves e tuplas nomeadas 'usuario' com os valores contendo todas as informações de cada chave.
+
 def ler_usuarios(arq_user_csv):
     Usuario = namedtuple('Usuario', ['login','senha', 'nome','telefone','permissao'])
     usuarios = {}
@@ -82,7 +93,8 @@ def ler_usuarios(arq_user_csv):
 ##### CRUD Read
 # Função para realizar login de um usuário.
 # Atualiza a variável global USUARIO_LOGADO em caso de login bem sucedido.
-# Parâmetro: usuarios (dict) - dicionário de usuários. # Retorno: None
+# Parâmetro:   
+    # dicionário 'usuarios'
 def fazer_login(usuarios):
     # preciso explicitar o acesso à variável global senão a atribuição ao final da função criará uma nova variável local
     global USUARIO_LOGADO
@@ -101,10 +113,10 @@ def fazer_login(usuarios):
 
 ##### CRUD Read
 # Função para ler informações de cadastro de um usuário.
-# # controle de acesso: permissão de visualizar informações de todos usuários apenas a administradores e profisisionais; clientes podem verificar suas informações
-# Parâmetros: 
-#   usuarios (dict) - dicionário de usuários.
-#   arq_user_csv (str) - caminho do arquivo CSV.
+# Controle de acesso: permissão de visualizar informações de todos usuários apenas a administradores e profisisionais.
+# Controle de acesso: permissão 'cliente' podem verificar apenas as próprias informações.
+# Parâmetros:
+    # arq_user_csv (str)
 # Retorno: print das informações
 def mostrar_informacoes(arq_user_csv):
     global USUARIO_LOGADO
@@ -114,7 +126,7 @@ def mostrar_informacoes(arq_user_csv):
         return False
 
     if USUARIO_LOGADO.permissao == 'cliente' or USUARIO_LOGADO.permissao == 'profissional':
-        console.print(Panel("[bold yellow]Informações de Cadastro[/bold yellow]", 
+        console.print(Panel("[bold orange1]Informações de Cadastro[/bold orange1]", 
                             title="Cadastro", expand=False))
         with open(arq_user_csv, mode='r', newline='', encoding='utf-8') as file:
             reader = csv.reader(file)
@@ -128,7 +140,7 @@ def mostrar_informacoes(arq_user_csv):
                     break
 
     if USUARIO_LOGADO.permissao == 'administrador':
-        console.print(Panel("[bold yellow]Informações de Cadastro [/bold yellow]", 
+        console.print(Panel("[bold orange1]Informações de Cadastro [/bold orange1]", 
                             title="Cadastro", expand=False))
         with open(arq_user_csv, mode='r', newline='', encoding='utf-8') as file:
             reader = csv.DictReader(file)
@@ -141,21 +153,33 @@ def mostrar_informacoes(arq_user_csv):
 ##### CRUD Create
 # Função para cadastrar um novo usuário.
 # Parâmetros: 
-#   usuarios (dict) - dicionário de usuários.
-#   arq_user_csv (str) - caminho do arquivo CSV.
-# Retorno: str - nome do novo usuário ou False em caso de falha.
+    # dicionário 'usuarios'
+    # arq_user_csv (str)
+# Retorno: str - nome_usuário do novo usuário ou False em caso de falha.
 def cadastrar_usuario(usuarios, arq_user_csv):
-    console.print(Panel('''[bold green]Cadastro de Novo Usuário[/bold green]\nPor favor, insira os dados do novo usuário.''', 
+    console.print(Panel('''[bold orange4]Cadastro de Novo Usuário[/bold orange4]\nPor favor, insira os dados do novo usuário.''', 
                         title="Novo Usuário", expand=False))
 
-    nome_usuario = Prompt.ask("[bold cyan]Login: [/bold cyan]")
-    senha = getpass("Senha: ")
-    nome = Prompt.ask("[bold cyan]Nome completo: [/bold cyan]")
-    telefone = Prompt.ask("[bold cyan]Telefone: [/bold cyan]")
+    nome = Prompt.ask("[bold cyan]Nome completo (Nome Sobrenome): [/bold cyan]")
+    telefone = Prompt.ask("[bold cyan]Telefone (ddd)12345-6789: [/bold cyan]")
+    
+    console.print("[bold cyan]Senha:[/bold cyan]", end="") #apenas para formatar a solicitação de senha
+    senha = getpass("")
+    nome_usuario = ("".join(nome.split()).lower()) #gera automaticamente o nome_usuario
+    console.print (f"[bold cyan]Login: [/bold cyan] {nome_usuario}")
 
     # controle de acesso: criar todos os niveis somente admin, profissional e clientes podem add apenas clientes
     if USUARIO_LOGADO is not None and USUARIO_LOGADO.permissao == 'administrador':
         permissao = Prompt.ask("[bold cyan]Permissão do Usuário (administrador/profissional/cliente)[/bold cyan]")
+        if permissao == '1':
+            permissao = 'cliente'
+        elif permissao == '2':
+            permissao = 'profissional'
+        elif permissao == '3':
+            permissao = 'administrador'
+        else:
+            console.print ("Opção inválida. Cadastrameto cancelado.")
+
 
     else:
         permissao = 'cliente'
@@ -167,41 +191,17 @@ def cadastrar_usuario(usuarios, arq_user_csv):
         with open(arq_user_csv, mode='a', newline='') as file:
             writer = csv.writer(file)
             writer.writerow([nome_usuario, senha, nome, telefone, permissao]) 
-        console.print(f"[bold green]Usuário '{nome}', login: '{nome_usuario}', telefone: '{telefone}' cadastrado com sucesso![/bold green]")
+        console.print(f"Usuário '{nome}', login: '{nome_usuario}', telefone: '{telefone}' \n[bold green]Cadastrado com sucesso![/bold green]")
 
     return nome_usuario
-
-##### CRUD Delete
-# Função para deletar um usuário.
-# controle de acesso: permissão de deletar usuários apenas a administradores
-# Parâmetros: 
-#   usuarios (dict) - dicionário de usuários.
-#   arq_user_csv (str) - caminho do arquivo CSV.
-# Retorno: bool - True se o usuário foi excluído com sucesso, False caso contrário.
-def excluir_usuario(usuarios, arq_user_csv):
-    console.print(Panel('''[bold red]Exclusão de Usuário[/bold red]\nPor favor, insira o login do usuário a ser excluído.''', 
-                        title="Excluir Usuário", expand=False))
-    nome_usuario = Prompt.ask("[bold cyan]Nome de Usuário (nome_usuario)[/bold cyan]")
-
-    # se encontrar o usuário, remova do arquivo
-    if usuarios.get(nome_usuario, None) is not None:
-        with open(arq_user_csv, mode='w', newline='') as file:
-            writer = csv.writer(file)
-            for usuario in usuarios.values():
-                if usuario.login != nome_usuario:
-                    writer.writerow([usuario.login, usuario.senha, usuario.nome, usuario.telefone, usuario.permissao]) 
-        console.print(f"[bold green]Usuário '{nome_usuario}' excluído com sucesso![/bold green]")
-        return True
-    else:
-        console.print(f"[bold yellow]Usuário '{nome_usuario}' não encontrado![/bold yellow]", style="yellow")
-        return False
-    
+  
 ##### CRUD Update
-# Função para atualizar a senha de um usuário.
-# controle de acesso: permissão de atualizar senha de qualquer usuario apenas a administradores; atualizar propria senha: cada usuário
+# Função para atualizar a senha de usuário.
+# Controle de acesso: permissão de atualizar senha de todos usuários restrita a administradores.
+# Controle de acesso: todos usuários podem atualizar propria senha.
 # Parâmetros: 
-#   usuarios (dict) - dicionário de usuários.
-#   arq_user_csv (str) - caminho do arquivo CSV.
+    # dicionário 'usuarios'
+    # arq_user_csv (str)
 # Retorno: bool - True se a senha foi atualizada com sucesso, False caso contrário.
 def atualizar_senha(usuarios, arq_user_csv):
     global USUARIO_LOGADO
@@ -211,13 +211,13 @@ def atualizar_senha(usuarios, arq_user_csv):
         return False
 
     if USUARIO_LOGADO.permissao == 'cliente':
-        console.print(Panel('''[bold yellow]Atualização de Senha[/bold yellow]\nPor favor, informe a nova senha desejada.''', 
+        console.print(Panel('''[bold orange1]Atualização de Senha[/bold orange1]\nPor favor, informe a nova senha desejada.''', 
                             title="Atualizar Senha", expand=False))
         nome_usuario = USUARIO_LOGADO.login
     
 
     if USUARIO_LOGADO.permissao == 'profissional':
-        console.print(Panel('''[bold yellow]Atualização de Senha[/bold yellow]\nEscolha qual usuário terá a senha atualizada.''', 
+        console.print(Panel('''[bold orange1]Atualização de Senha[/bold orange1]\nEscolha qual usuário terá a senha atualizada.''', 
                             title="Atualizar Senha", expand=False))     
         atualiza_profissional = Prompt.ask("[bold cyan]Por favor, digite '1' para atualizar a SUA senha ou '2' para atualizar a senha de algum cliente seu.[/bold cyan]")
         if atualiza_profissional == "1":
@@ -229,7 +229,7 @@ def atualizar_senha(usuarios, arq_user_csv):
             return False
 
     else:
-        console.print(Panel('''[bold yellow]Atualização de Senha[/bold yellow]\nPor favor, insira o login do usuário cuja senha será atualizada.''', 
+        console.print(Panel('''[bold orange1]Atualização de Senha[/bold orange1]\nPor favor, insira o login do usuário cuja senha será atualizada.''', 
                             title="Atualizar Senha", expand=False))
         nome_usuario = Prompt.ask("[bold cyan]Nome de Usuário: [/bold cyan]")
     
@@ -249,14 +249,40 @@ def atualizar_senha(usuarios, arq_user_csv):
         console.print(f"[bold yellow]Usuário '{nome_usuario}' não encontrado![/bold yellow]", style="yellow")
         return False
     
+##### CRUD Delete
+# Função para deletar um usuário.
+# Controle de acesso: função restrita a usuário com permissão 'administrador' e 'profisisional'.
+# Parâmetros: 
+    # dicionário 'usuarios'
+    # arq_user_csv (str)
+# Retorno: bool - True se o usuário foi excluído com sucesso, False caso contrário.
+def excluir_usuario(usuarios, arq_user_csv):
+    console.print(Panel('''[bold red]Exclusão de Usuário[/bold red]\nPor favor, insira o login do usuário a ser excluído.''', 
+                        title="Excluir Usuário", expand=False))
+    nome_usuario = Prompt.ask("[bold cyan]Nome de Usuário (nome_usuario)[/bold cyan]")
+
+    # se encontrar o usuário, remove do arquivo
+    if usuarios.get(nome_usuario, None) is not None:
+        with open(arq_user_csv, mode='w', newline='') as file:
+            writer = csv.writer(file)
+            for usuario in usuarios.values():
+                if usuario.login != nome_usuario:
+                    writer.writerow([usuario.login, usuario.senha, usuario.nome, usuario.telefone, usuario.permissao]) 
+        console.print(f"[bold green]Usuário '{nome_usuario}' excluído com sucesso![/bold green]")
+        return True
+    else:
+        console.print(f"[bold yellow]Usuário '{nome_usuario}' não encontrado![/bold yellow]", style="yellow")
+        return False
+  
 ##################### FIM FUNÇÕES DE USUARIO ########################
 
 
 ##################### INICIO FUNÇÕES DE SERVIÇOS #####################
 ##### CRUD Read
 # Função para ler servicos do arquivo CSV.
-# Parâmetro: arq_serv_csv (str) - caminho do arquivo CSV.
-# #Retorno: dict - dicionário com servicos como chaves e tuplas; codigo como valores.
+# Parâmetro:
+   # arq_serv_csv (str) >>> arquivo CSV de serviços.
+#Retorno: dicionário 'servicos' com codigo como chaves e tuplas nomeadas 'servico' com os valores contendo todas as informações de cada chave.
 def ler_servicos(arq_serv_csv):
     servico = namedtuple('servico', ['codigo', 'atividade','regiao','tecnico','preco'])
     servicos = {}
@@ -271,43 +297,91 @@ def ler_servicos(arq_serv_csv):
 
 ##### CRUD Read
 # Função para apresentar servicos do arquivo CSV.
-# Parâmetro: arq_serv_csv (str) - caminho do arquivo CSV.
-# #Retorno: dict - dicionário com servicos como chaves e tuplas; codigo como valores.
+# Opções de visualização ordenados por nome (codigo), preço (preco) ou selecionar um unico servico p/ veerificar profissionais disponíveis (atividade)
+# Parâmetro:
+    # arq_serv_csv (str)
+#Retorno: impressão do arquivo de servicos
+
 def mostrar_servicos(arq_serv_csv):
+    console.print("[bold cyan]1 - [/bold cyan] [bold white]Escolher Atividade (visualizar profissionais disponiveis)[/bold white]")
+    console.print("[bold cyan]2 - [/bold cyan] [bold white]Visualizar todos os serviços ordenados de A-Z (código) [/bold white]")
+    console.print("[bold cyan]3 - [/bold cyan] [bold white]Visualizar todos os serviços ordenador por preço) [/bold white]")    
+    ord_serv = Prompt.ask("[bold orange1]Digite o número da opção desejada[/bold orange1]", choices=["1", "2", "3", "0"])
     
-    with open(arq_serv_csv, mode='r', newline='', encoding='utf-8') as file:
+    if ord_serv == '1':
+        console.print("[bold white]Escolher Região: MG sul | RS noroeste |MG centrooeste [/bold white]")
+        filtrar_regiao = Prompt.ask("[bold orange1]Digite a região e veja as opções disponíveis:[/bold orange1]")
+        regioes_validas = ['MG sul', 'RS noroeste', 'MG centrooeste']
+       
+        if filtrar_regiao not in regioes_validas:
+            console.print("[bold red]Erro:[/bold red] Região inválida! Escolha uma das opções válidas.", style="red")
+            return False
+        
+        with open(arq_serv_csv, mode='r', newline='', encoding='utf-8') as file:
             reader = csv.DictReader(file)
-            cabecalho = ["Código", "Atividade", "Região", "Técnico", "Preço"]
+            cabecalho = ["Código", "Atividade", "Região", "Técnico", "Preço (R$)"]
             print(f"{'|'.join(cabecalho)}")
-            print("-" * 50)
-            for row in reader:
-                 print(f"{row['codigo']:<7}|{row['atividade']:<25}|{row['regiao']:<15}|{row['tecnico']:<18}|{row['preco']:<12}")
+            print("-" * 100)
+            
+            linhas = [row for row in reader if row['regiao'].lower() == filtrar_regiao.lower()]
+            if not linhas:
+                console.print(f"[bold red]Nenhum serviço encontrado para a região '{filtrar_regiao}'[/bold red]", style="red")
+                return False
+            for row in linhas:
+                print(f"{row['codigo']:<7}|{row['atividade']:<25}|{row['regiao']:<15}|{row['tecnico']:<18}|{row['preco']:<12}")
+   
+    elif ord_serv == '2':    
+        with open(arq_serv_csv, mode='r', newline='', encoding='utf-8') as file:
+            reader = csv.DictReader(file)
+            cabecalho = ["Código", "Atividade", "Região", "Técnico", "Preço (R$)"]
+            print(f"{'|'.join(cabecalho)}")
+            print("-" * 100)
     
+            linhas = list(reader)
+            linhas_ordenadas = sorted(linhas, key=lambda x: x['codigo'])
+            for row in linhas_ordenadas:
+                print(f"{row['codigo']:<7}|{row['atividade']:<25}|{row['regiao']:<15}|{row['tecnico']:<18}|{row['preco']:<12}")
+
+    if ord_serv == '3':
+        with open(arq_serv_csv, mode='r', newline='', encoding='utf-8') as file:
+            reader = csv.DictReader(file)
+            cabecalho = ["Código", "Atividade", "Região", "Técnico", "Preço (R$)"]
+            print(f"{'|'.join(cabecalho)}")
+            print("-" * 100)
+    
+            linhas = list(reader)
+            linhas_ordenadas = sorted(linhas, key=lambda x: x['preco'])
+            for row in linhas_ordenadas:
+                print(f"{row['codigo']:<7}|{row['atividade']:<25}|{row['regiao']:<15}|{row['tecnico']:<18}|{row['preco']:<12}")
+
 ##### CRUD Create
 # Função para cadastrar um novo serviço.
-# controle de acesso: permissão de criar serviços apenas a administradores
+# Controle de acesso: função restrita a administradores.
 # Parâmetros: 
-#   servicos (dict) - dicionário de servicos. 
-#   arq_serv_csv (str) - caminho do arquivo CSV.
+    # dicionário 'servicos'
+    # arq_serv_csv (str)
+# Retorno: bool - codigo do novo serviço ou False em caso de falha.
 def cadastrar_servico(servicos, arq_serv_csv):
     if USUARIO_LOGADO is not None and USUARIO_LOGADO.permissao == 'administrador':
-        console.print(Panel('''[bold green]Cadastro de Novo Serviço[/bold green]\nPor favor, insira os dados do novo serviço.''', 
+        console.print(Panel('''[bold orange4]Cadastro de Novo Serviço[/bold orange4]\nPor favor, insira os dados do novo serviço.''', 
                         title="Novo Serviço", expand=False))
 
-        codigo = Prompt.ask("[bold cyan]codigo: [/bold cyan]")
-        atividade = Prompt.ask("[bold cyan]atividade: [/bold cyan]")
-        regiao = Prompt.ask("[bold cyan]regiao: [/bold cyan]")
-        tecnico = Prompt.ask("[bold cyan]tecnico: [/bold cyan]")
-        preco = Prompt.ask("[bold cyan]preco: [/bold cyan]")
+        codigo = Prompt.ask("[bold cyan]Código: [/bold cyan]")
+        atividade = Prompt.ask("[bold cyan]Atividade: [/bold cyan]")
+        regiao = Prompt.ask("[bold cyan]Região: [/bold cyan]")
+        tecnico = Prompt.ask("[bold cyan]Técnico: [/bold cyan]")
+        preco_str = Prompt.ask("[bold cyan]Preço (digite apenas números): [/bold cyan]")
+
+        preco = int(preco_str)  # Converte o valor para inteiro para possibilitar a ordenação
 
         if servicos.get(codigo, None) is not None:
-            console.print(f"[bold red]Erro:[/bold red] Serviço '[bold red]{login}[/bold red]' já existe!", style="red")
+            console.print(f"[bold red]Erro:[/bold red] Serviço '[bold red]{codigo}[/bold red]' já existe!", style="red")
             return False
         else: 
             with open(arq_serv_csv, mode='a', newline='') as file:
                 writer = csv.writer(file)
                 writer.writerow([codigo,atividade,regiao,tecnico,preco]) 
-            console.print(f"[bold green]codigo '{codigo}', atividade: '{atividade}', regiao: '{regiao}', tecnico: '{tecnico}', preco: '{preco}' cadastrado com sucesso![/bold green]")
+            console.print(f"Codigo '{codigo}', Atividade: '{atividade}', Região: '{regiao}', Técnico: '{tecnico}', Preco: '{preco}' \n[bold green]Cadastrado com sucesso![/bold green]")
     else:
         console.print("[bold yellow]Você não possui permissão para realizar esta ação. Contate a administração![/bold yellow]", style="yellow")
         return False
@@ -315,18 +389,19 @@ def cadastrar_servico(servicos, arq_serv_csv):
 
 ##### CRUD Update
 # Função para atualizar o preço de um serviço.
-# controle de acesso: permissão de atualizar preços de serviços apenas a administradores
+# Controle de acesso: função restrita a administradores.
 # Parâmetros: 
-#   servicos (dict) - dicionário de servicos.
-#   arq_serv_csv (str) - caminho do arquivo CSV.
-# Retorno: bool - True se a senha foi atualizado com sucesso, False caso contrário.
+    # dicionário 'servicos'
+    # arq_serv_csv (str)
+# Retorno: bool - True se a senha foi atualizado com sucesso ou False em caso de falha.
 def atualizar_preco(servicos, arq_serv_csv):
     if USUARIO_LOGADO is not None and USUARIO_LOGADO.permissao == 'administrador':
-        console.print(Panel('''[bold yellow]Atualização de Preço de serviço[/bold yellow]\nPor favor, insira o codigo do serviço para realizar a atualização.''', 
+        console.print(Panel('''[bold orange1]Atualização de Preço de serviço[/bold orange1]\nPor favor, insira o codigo do serviço para realizar a atualização.''', 
                             title="Atualizar preço", expand=False))
 
         codigo = Prompt.ask("[bold cyan]Codigo do serviço: [/bold cyan]")
-        novo_preco = Prompt.ask("[bold cyan]Novo preço do serviço (digite no modelo correto - sem aspas >> 'R$_1.000,00'): [/bold cyan]")
+        novo_preco_str = Prompt.ask("[bold cyan]Novo preço do serviço (digite apenas numeros, sem pontuações): [/bold cyan]")
+        novo_preço = int (novo_preco_str) # Converte o valor para inteiro para possibilitar a ordenação
 
         if servicos.get(codigo, None) is not None:
             with open(arq_serv_csv, mode='w', newline='') as file:
@@ -347,18 +422,17 @@ def atualizar_preco(servicos, arq_serv_csv):
 
 ##### CRUD Delete
 # Função para deletar um serviço.
-# controle de acesso: permissão de deletar serviços apenas a administradores
+# Controle de acesso: função restrita a administradores.
 # Parâmetros: 
-#   servicos (dict) - dicionário de servicos.
-#   arq_serv_csv (str) - caminho do arquivo CSV.
-# Retorno: bool - True se o usuário foi excluído com sucesso, False caso contrário.
+    # dicionário 'servicos'
+    # arq_serv_csv (str)
+# Retorno: bool - True se o serviço foi excluído com sucesso ou False em caso de falha.
 def excluir_servico(servicos, arq_serv_csv):
     if USUARIO_LOGADO is not None and USUARIO_LOGADO.permissao == 'administrador':
         console.print(Panel('''[bold red]Exclusão de Serviço[/bold red]\nPor favor, insira o Codigo do serviço a ser excluído.''', 
                         title="Excluir Serviço", expand=False))
         codigo = Prompt.ask("[bold cyan] Codigo do serviço[/bold cyan]")
 
-        #se encontrar o servico, remova do arquivo
         if servicos.get(codigo, None) is not None:
             with open(arq_serv_csv, mode='w', newline='') as file:
                 writer = csv.writer(file)
@@ -380,8 +454,9 @@ def excluir_servico(servicos, arq_serv_csv):
 ##################### INICIO FUNÇÕES DE AGENDAMENTOS #####################
 ##### CRUD Read
 # Função para ler agendamentos do arquivo CSV.
-# Parâmetro: arq_agen_csv (str) - caminho do arquivo CSV.
-# #Retorno: dict - dicionário com agendas como chaves e tuplas; cliente como valores.
+# Parâmetro:
+    # arq_agen_csv (str) - caminho do arquivo CSV.
+#Retorno: dicionário 'agendas' com cod_agenda como chaves e tuplas nomeadas 'agenda' com os valores contendo todas as informações de cada chave.
 def ler_agendas(arq_agen_csv):
     agenda = namedtuple('agenda', ['cliente', 'cod_serv','servico','tecnico','data','cod_agenda'])
     agendas = {}
@@ -392,11 +467,15 @@ def ler_agendas(arq_agen_csv):
             cliente,cod_serv,servico,tecnico,data,cod_agenda = row
             agendas [cod_agenda] = agenda (cliente=cliente,cod_serv=cod_serv,servico=servico,tecnico=tecnico,data=data,cod_agenda=cod_agenda)
     
-    return agendas #return será utilizado para abrir demais funcoes servico
+    return agendas #return será utilizado para abrir demais funcoes agenda
 
 ##### CRUD Read
 # Função para apresentar agendamentos do arquivo CSV.
-# Parâmetro: arq_agen_csv  (str) - caminho do arquivo CSV.
+# Controle de acesso: permissão de visualizar todos agendamentos restrita a administradores.
+# Controle de acesso: permissão de visualizar agendamentos vinculados ao seu nome restrita a profissionais e clientes.
+# Parâmetro:
+    # arq_agen_csv (str)
+#Retorno: impressão do arquivo de agendas de acordo com permissão
 def mostrar_agendas(arq_agen_csv):
     global USUARIO_LOGADO
 
@@ -405,7 +484,7 @@ def mostrar_agendas(arq_agen_csv):
         return False
 
     if USUARIO_LOGADO.permissao == 'cliente':
-        console.print(Panel("[bold yellow]Informações de Agenda [/bold yellow]", 
+        console.print(Panel("[bold orange1]Informações de Agenda [/bold orange1]", 
                             title="Agendamentos", expand=False))
         with open(arq_agen_csv, mode='r', newline='', encoding='utf-8') as file:
             reader = csv.reader(file)
@@ -419,7 +498,7 @@ def mostrar_agendas(arq_agen_csv):
                     break
     
     if USUARIO_LOGADO.permissao == 'profissional':
-        console.print(Panel("[bold yellow]Informações de Agenda - Técnico [/bold yellow]", 
+        console.print(Panel("[bold orange1]Informações de Agenda - Técnico [/bold orange1]", 
                             title="Agendamentos", expand=False))
         with open(arq_agen_csv, mode='r', newline='', encoding='utf-8') as file:
             reader = csv.DictReader(file)
@@ -433,7 +512,7 @@ def mostrar_agendas(arq_agen_csv):
                     print(f"{row['cliente']:<20} | {row['cod_serv']:<7} | {row['servico']:<25} | {row['tecnico']:<13} | {row['data']:<12} | {row['cod_agenda']:<15}")
 
     if USUARIO_LOGADO.permissao == 'administrador':
-        console.print(Panel("[bold yellow]Informações de Agendas - Gestão [/bold yellow]", 
+        console.print(Panel("[bold orange1]Informações de Agendas - Gestão [/bold orange1]", 
                             title="Agendamentos", expand=False))
         with open(arq_agen_csv, mode='r', newline='', encoding='utf-8') as file:
             reader = csv.DictReader(file)
@@ -447,13 +526,13 @@ def mostrar_agendas(arq_agen_csv):
 
 ##### CRUD Create
 # Função para criar um novo agendamento (somente em caso de novos clientes, nunca visitados anteriormente).
-# controle de acesso: permite apenas a profissionais e admins criar/editar e excluir agendas
-# Parâmetros: 
-#   agendas (dict) - dicionário de agendas. 
-#   arq_agen_csv  (str) - caminho do arquivo CSV.
+# Controle de acesso: permissão de realizar agendamentos restrita a profissionais e administradores.
+# Parâmetro:
+    # arq_agen_csv (str)
+#Retorno: bool - cod_agendamento se for cadastrado com sucesso ou False em caso de falha. 
 def cadastrar_agenda(arq_agen_csv):
     if USUARIO_LOGADO is not None and USUARIO_LOGADO.permissao == 'profissional':
-        console.print(Panel('''[bold green]Novo Agendamento[/bold green]\nPor favor, insira os dados para o agendamento.''', 
+        console.print(Panel('''[bold orange4]Novo Agendamento[/bold orange4]\nPor favor, insira os dados para o agendamento.''', 
                         title="Agendamentos", expand=False))
 
         cliente = Prompt.ask("[bold cyan]Cliente: [/bold cyan]")
@@ -461,7 +540,7 @@ def cadastrar_agenda(arq_agen_csv):
         servico = Prompt.ask("[bold cyan]Servico: [/bold cyan]")
         tecnico = USUARIO_LOGADO.nome
         data = Prompt.ask("[bold cyan]Data (aaaa-mm-dd): [/bold cyan]")
-        cod_agenda = cliente+cod_serv
+        cod_agenda = cliente+cod_serv #cod_agenda é gerado automaticamente concatenando nome_usuario+cod_serviço.
 
         with open(arq_agen_csv, mode='a', newline='') as file:
             writer = csv.writer(file)
@@ -469,7 +548,7 @@ def cadastrar_agenda(arq_agen_csv):
         console.print(f"[bold green]Agendado com sucesso:[/bold green]\nCliente: '{cliente}' \nCódigo do Serviço: '{cod_serv}'\nServiço: '{servico}' \nTécnico: '{tecnico}' \nData:  '{data}'\nCódigo agendamento: '{cod_agenda}'")
     
     elif USUARIO_LOGADO is not None and USUARIO_LOGADO.permissao == 'administrador':
-        console.print(Panel('''[bold green]Novo Agendamento[/bold green]\nPor favor, insira os dados para o agendamento.''', 
+        console.print(Panel('''[bold orange4]Novo Agendamento[/bold greorange4en]\nPor favor, insira os dados para o agendamento.''', 
                         title="Agendamentos", expand=False))
 
         cliente = Prompt.ask("[bold cyan]Cliente: [/bold cyan]")
@@ -490,15 +569,15 @@ def cadastrar_agenda(arq_agen_csv):
     return cod_agenda
 
 ##### CRUD Update
-# Função para atualizar o preço de um serviço.
-# controle de acesso permite apenas a admins criar/editar e excluir serviços
-# Parâmetros: 
-#   servicos (dict) - dicionário de servicos.
-#   arq_serv_csv (str) - caminho do arquivo CSV.
-# Retorno: bool - True se a senha foi atualizado com sucesso, False caso contrário.
+# Função para atualizar a data de um serviço.
+# Controle de acesso: permissão de atualizar data de agendamentos restrita a profissionais.
+# Parâmetro:
+    # arq_agen_csv (str)
+    # dicionário 'agendas'
+# Retorno: bool - True se a data foi atualizada com sucesso ou False em caso de falha. Permite cancelar.
 def atualizar_agenda(agenda, arq_agen_csv):
     if USUARIO_LOGADO is not None and USUARIO_LOGADO.permissao == 'profissional':
-        console.print(Panel('''[bold yellow]Atualização de Data do serviço a ser prestado[/bold yellow]\nPor favor, insira o nome do cliente e código do serviço para reagendar.''', 
+        console.print(Panel('''[bold orange1]Atualização de Data do serviço a ser prestado[/bold orange1]\nPor favor, insira o nome do cliente e código do serviço para reagendar.''', 
                             title="Atualizar agenda", expand=False))
         
         cod_agenda = Prompt.ask("[bold cyan]Codigo de agendamento (Cliente+CodigoServiço): [/bold cyan]")
@@ -530,69 +609,70 @@ def atualizar_agenda(agenda, arq_agen_csv):
         console.print("[bold yellow]Você não possui permissão para realizar esta ação. Contate a administração![/bold yellow]", style="yellow")
         return False
 
-
 ##################### FIM FUNÇÕES DE AGENDAMENTOS #####################
 
 ##################### INICIO FUNÇÕES DE MENU - INTERAÇÃO ########################
-######### 1.TELA MENU INICIAL APP - OPÇÕES P/ LOGIN, CRIAR CADASTRO, SAIR ##################
+######### 1.TELA MENU INICIAL APP - OPÇÕES P/ LOGIN, CRIAR CADASTRO, VISUALIZAR SERVIÇOS DISPONIVEIS, SAIR ##################
 # Função para exibir o menu inicial.
 # Retorno: str - opção escolhida pelo usuário.
 def menu_inicial():
-    console.print(Panel("[bold green]Sistema de Agendamentos de Visita Técnica![/bold green]\nEscolha uma das opções abaixo:", title="Menu Inicial", expand=False))
+    console.print(Panel("[bold orange4]Seja Bem Vindo\nSistema de Agendamentos de Visita Técnica![/bold orange4]\nEscolha uma das opções abaixo:", title="Menu Inicial", expand=False))
     console.print("[bold cyan]1.[/bold cyan] [bold white]Fazer Login[/bold white]")
-    console.print("[bold cyan]2.[/bold cyan] [bold white]Cadastrar[/bold white]")
-    console.print("[bold cyan]3.[/bold cyan] [bold white]Serviços disponíveis[/bold white]")
+    console.print("[bold cyan]2.[/bold cyan] [bold white]Cadastrar Usuário[/bold white]")
+    console.print("[bold cyan]3.[/bold cyan] [bold white]Visualizar Serviços disponíveis[/bold white]")
     console.print("[bold cyan]0.[/bold cyan] [bold white]Sair do sistema[/bold white]")
     
-    opcao = Prompt.ask("[bold yellow]Digite o número da opção desejada[/bold yellow]", choices=["1", "2", "3", "0"])
+    opcao = Prompt.ask("[bold orange1]Digite o número da opção desejada[/bold orange1]", choices=["1", "2", "3", "0"])
     return opcao
 
 ########## 2.TELA MENU INTERNO APP ###################
+# Após login inicial.
+# Disponibiliza opções de acordo com o nível de permissão do usuário acessado.
 # Retorno: str - opção escolhida pelo usuário.
 def menu_interno():
-    console.print(Panel(f"[bold green]Olá {USUARIO_LOGADO.nome}![/bold green]\nEscolha uma das opções abaixo:", 
+    console.print(Panel(f"[bold orange4]Olá {USUARIO_LOGADO.nome}![/bold orange4]\nEscolha uma das opções abaixo:", 
                         title="Menu Interno", expand=False))
     
-    # controle de acesso - gerenciamento de permissões dos usuários
-    # administrador pode atualizar ou excluir
-    # cliente apenas atualizam (lógica interna para atualizar somente seu próprio cadastro)
+    # Controle de acesso - gerenciamento das permissões dos usuários
     if USUARIO_LOGADO.permissao == 'administrador':
-        console.print("[bold cyan]1.[/bold cyan] [bold white]Atualizar senha[/bold white]")
-        console.print("[bold cyan]2.[/bold cyan] [bold white]Visualizar cadastros de usuários[/bold white]")
-        console.print("[bold cyan]3.[/bold cyan] [bold white]Excluir cadastro de usuário [/bold white]")
-        console.print("[bold cyan]4.[/bold cyan] [bold white]Visualizar cadastros de serviços[/bold white]") 
-        console.print("[bold cyan]5.[/bold cyan] [bold white]Adicionar serviço[/bold white]")
-        console.print("[bold cyan]6.[/bold cyan] [bold white]Atualizar valores de serviços[/bold white]")
-        console.print("[bold cyan]7.[/bold cyan] [bold white]Excluir serviço[/bold white]")
-        console.print("[bold cyan]8.[/bold cyan] [bold white]Visualizar agendamentos[/bold white]")
-        console.print("[bold cyan]9.[/bold cyan] [bold white]Criar agendamento[/bold white]")
+        console.print("[bold cyan]1.[/bold cyan] [bold white]Visualizar cadastros de usuários[/bold white]")
+        console.print("[bold cyan]2.[/bold cyan] [bold white]Criar cadastros de usuários[/bold white]")
+        console.print("[bold cyan]3.[/bold cyan] [bold white]Atualizar senha[/bold white]")        
+        console.print("[bold cyan]4.[/bold cyan] [bold white]Excluir cadastro de usuário [/bold white]")
+        console.print("[bold cyan]5.[/bold cyan] [bold white]Visualizar cadastros de serviços[/bold white]") 
+        console.print("[bold cyan]6.[/bold cyan] [bold white]Adicionar serviço[/bold white]")
+        console.print("[bold cyan]7.[/bold cyan] [bold white]Atualizar valores de serviços[/bold white]")
+        console.print("[bold cyan]8.[/bold cyan] [bold white]Excluir serviço[/bold white]")
+        console.print("[bold cyan]9.[/bold cyan] [bold white]Visualizar agendamentos[/bold white]")
+        console.print("[bold cyan]10.[/bold cyan] [bold white]Criar agendamento[/bold white]")
         console.print("[bold cyan]0.[/bold cyan] [bold white]Para fazer logout digite '0'[/bold white]")
-        opcao = Prompt.ask("[bold yellow]Digite o número da opção desejada[/bold yellow]", choices=["0","1", "2", "3", "4", "5", "6", "7", "8", "9"])
+        opcao = Prompt.ask("[bold orange1]Digite o número da opção desejada[/bold orange1]", choices=["0","1", "2", "3", "4", "5", "6", "7", "8", "9"])
 
     elif USUARIO_LOGADO.permissao == 'profissional':
-        console.print("[bold cyan]1.[/bold cyan] [bold white]Atualizar senha[/bold white]")
-        console.print("[bold cyan]2.[/bold cyan] [bold white]Visualizar informações de cadastro [/bold white]")
-        console.print("[bold cyan]3.[/bold cyan] [bold white]Excluir cadastro de usuário [/bold white]")
-        console.print("[bold cyan]4.[/bold cyan] [bold white]Visualizar cadastros de serviços[/bold white]") 
-        console.print("[bold cyan]8.[/bold cyan] [bold white]Visualizar agendamentos[/bold white]")
-        console.print("[bold cyan]9.[/bold cyan] [bold white]Criar agendamento[/bold white]")
-        console.print("[bold cyan]10.[/bold cyan] [bold white]Editar agendamento (data)[/bold white]")
+        console.print("[bold cyan]1.[/bold cyan] [bold white]Visualizar cadastros de usuários[/bold white]")
+        console.print("[bold cyan]2.[/bold cyan] [bold white]Criar cadastros de usuários[/bold white]")
+        console.print("[bold cyan]3.[/bold cyan] [bold white]Atualizar senha[/bold white]")      
+        console.print("[bold cyan]5.[/bold cyan] [bold white]Visualizar cadastros de serviços[/bold white]") 
+        console.print("[bold cyan]9.[/bold cyan] [bold white]Visualizar agendamentos[/bold white]")
+        console.print("[bold cyan]10.[/bold cyan] [bold white]Criar agendamento[/bold white]")
+        console.print("[bold cyan]11.[/bold cyan] [bold white]Editar agendamento (data)[/bold white]")
         console.print("[bold cyan]0.[/bold cyan] [bold white]Para fazer logout digite '0'[/bold white]")
-        opcao = Prompt.ask("[bold yellow]Digite o número da opção desejada[/bold yellow]", choices=["0","1", "2", "3","4","8", "9", "10"])
+        opcao = Prompt.ask("[bold orange1]Digite o número da opção desejada[/bold orange1]", choices=["0","1", "2", "3","5","9", "10", "11"])
 
     else:
-        console.print("[bold cyan]1.[/bold cyan] [bold white]Atualizar senha[/bold white]")
-        console.print("[bold cyan]2.[/bold cyan] [bold white]Visualizar informações de cadastro [/bold white]")
-        console.print("[bold cyan]8.[/bold cyan] [bold white]Visualizar agendamento[/bold white]")
+        console.print("[bold cyan]1.[/bold cyan] [bold white]Visualizar cadastros de usuários[/bold white]")
+        console.print("[bold cyan]3.[/bold cyan] [bold white]Atualizar senha[/bold white]")
+        console.print("[bold cyan]5.[/bold cyan] [bold white]Visualizar cadastros de serviços[/bold white]") 
+        console.print("[bold cyan]9.[/bold cyan] [bold white]Visualizar agendamentos[/bold white]")
         console.print("[bold cyan]0.[/bold cyan] [bold white]Para fazer logout digite '0'[/bold white]")
-        opcao = Prompt.ask("[bold yellow]Digite o número da opção desejada[/bold yellow]", choices=["0","1", "2", "8"])
+        opcao = Prompt.ask("[bold orange1]Digite o número da opção desejada[/bold orange1]", choices=["0","1","3", "5", "9"])
     return  opcao
 
 ##### CRUD Read
-# Parâmetro: usuarios (dict) - dicionário de usuários.
+# Parâmetro:
+    # dicionário 'usuarios'
 def fazer_login(usuarios):
-    # explicitar o acesso à variável global senão a atribuição ao final da função vai criar uma nova variável local
-    global USUARIO_LOGADO # Atualiza a variável global USUARIO_LOGADO em caso de login bem sucedido.
+    global USUARIO_LOGADO # Atualiza a variável global (utilizada em todo o programa) USUARIO_LOGADO em caso de login bem sucedido para o usuário logado.
 
     console.print(Panel('''🟢 [bold green]Login[/bold green] 🟢\n\nPor favor, insira seus dados:''', #Customização
                         expand=False, title="Tela de Login"))
@@ -608,24 +688,26 @@ def fazer_login(usuarios):
 ##################### FIM FUNÇÕES DE MENU - INTERAÇÃO ########################
 
 ##################### INICIO FLUXO PRINCIPAL DO CODIGO ###################### 
+# Define os dicionários a partir das funções ler_"" e indica a variavel correspondente
+    #   (variavel criada no inicio do programa com cada arquivo correspondente).
 console = Console()
 usuarios = ler_usuarios(ARQUIVO_USUARIOS)
 servicos = ler_servicos(ARQUIVO_SERVICOS)
 agendas = ler_agendas(ARQUIVO_AGENDAS)
-#agenda = ler_agenda(ARQUIVO_AGENDA)
+
 while True:
-    opcao = menu_inicial() #CRUDE :::: READ
+    opcao = menu_inicial()
     if opcao == "1":
-        fazer_login(usuarios) #encaminha para função fazer login
+        fazer_login(usuarios)
     elif opcao == "2":
-        novo_user = cadastrar_usuario (usuarios, ARQUIVO_USUARIOS) #encaminha para função cadastrar
+        novo_user = cadastrar_usuario (usuarios, ARQUIVO_USUARIOS)
         if novo_user != False:
             usuarios = ler_usuarios(ARQUIVO_USUARIOS)
             USUARIO_LOGADO = usuarios.get(novo_user)
     elif opcao == "3":
                 if mostrar_servicos (ARQUIVO_SERVICOS):
                     servicos = ler_servicos(ARQUIVO_SERVICOS)
-    elif opcao == "0": #sai do programa
+    elif opcao == "0":
         break
     else:
         console.print(f"[bold yellow]Opção inválida![/bold yellow]", style="yellow")
@@ -635,35 +717,38 @@ while True:
             opcao = menu_interno()
             if opcao == '0': break
             elif opcao == "1": 
+                if mostrar_informacoes(ARQUIVO_USUARIOS):
+                    usuarios = ler_usuarios(ARQUIVO_USUARIOS)            
+            elif opcao == "2": 
+                if cadastrar_usuario (usuarios, ARQUIVO_USUARIOS): 
+                    usuarios = ler_usuarios(ARQUIVO_USUARIOS)        
+            elif opcao == "3": 
                 if atualizar_senha(usuarios, ARQUIVO_USUARIOS):
                     usuarios = ler_usuarios(ARQUIVO_USUARIOS)
-            elif opcao == "2": 
-                if mostrar_informacoes(ARQUIVO_USUARIOS):
-                    usuarios = ler_usuarios(ARQUIVO_USUARIOS)
-            elif opcao == "3": 
+            elif opcao == "4": 
                 if excluir_usuario(usuarios, ARQUIVO_USUARIOS):
                     usuarios = ler_usuarios(ARQUIVO_USUARIOS)
-            elif opcao == "4":
+            elif opcao == "5":
                 if mostrar_servicos (ARQUIVO_SERVICOS):
                     servicos = ler_servicos(ARQUIVO_SERVICOS)
-            elif opcao == "5":
+            elif opcao == "6":
                 if cadastrar_servico (servicos, ARQUIVO_SERVICOS):
                     servicos = ler_servicos(ARQUIVO_SERVICOS)
-            elif opcao == "6":
+            elif opcao == "7":
                 if atualizar_preco (servicos, ARQUIVO_SERVICOS):
                     servicos = ler_servicos(ARQUIVO_SERVICOS)
-            elif opcao == "7":
+            elif opcao == "8":
                 if excluir_servico (servicos, ARQUIVO_SERVICOS):
                     servicos = ler_servicos(ARQUIVO_SERVICOS)
-            elif opcao == "8":                          #################################
+            elif opcao == "9":                          
                 mostrar_agendas (ARQUIVO_AGENDAS)
-                   # servicos = ler_agendas (ARQUIVO_AGENDAS)
-            elif opcao == "9":                          #################################
+            elif opcao == "10":              
                 if cadastrar_agenda (ARQUIVO_AGENDAS):
                     agendas = ler_agendas (ARQUIVO_AGENDAS)
-            elif opcao == "10":                          #################################
+            elif opcao == "11":                         
                 if atualizar_agenda (agendas,ARQUIVO_AGENDAS):
                   agendas = ler_agendas (ARQUIVO_AGENDAS)
 
+##################### FIM FLUXO PRINCIPAL DO CODIGO ######################
 
-##################### FIM FLUXO PRINCIPAL DO CODIGO ###################### 
+#QUE TU TENHAS UMA ÓTIMA EXPERIENCIA COM O PROGRAMA. ESTOU ABERTA A FEEDBACKS!!! :D
